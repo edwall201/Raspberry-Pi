@@ -8,7 +8,8 @@ try:
 except Exception:
     lcd = CharLCD('PCF8574', 0x3f)
 
-button = Button(16, pull_up=True)
+button1 = Button(16, pull_up=True)
+button2 = Button(23, pull_up=True)
 
 press_count = 0
 
@@ -26,11 +27,17 @@ def button_released():
     lcd.cursor_pos = (0, 0)
     lcd.write_string("Status: READY ")
 
-button.when_pressed = button_pressed
-button.when_released = button_released
+def button_shutdown():
+    print("\nShutdown button pressed. ")
+    lcd.clear()
+    lcd.write_string("System Shutdown")
+    sys.exit(0)
+    os.kill(os.getpid(), singal.SIGINT)
 
-print("--- Integrated LCD & Button Test Started ---")
-
+button1.when_pressed = button_pressed
+button1.when_released = button_released
+button2.when_pressed = button_shutdown
+    
 lcd.clear()
 lcd.write_string("Status: READY")
 lcd.cursor_pos = (1, 0)
@@ -41,5 +48,8 @@ try:
 except KeyboardInterrupt:
     lcd.clear()
     lcd.write_string("System Shutdown")
-    print("\nProgram closed cleanly by user.")
+    print("\nProgram closed via keyboard.")
     sys.exit(0)
+
+
+

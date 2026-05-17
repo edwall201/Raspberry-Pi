@@ -1,6 +1,8 @@
 from gpiozero import Button
 from RPLCD.i2c import CharLCD
 from signal import pause
+import os
+import signal
 import sys
 
 try:
@@ -31,8 +33,7 @@ def button_shutdown():
     print("\nShutdown button pressed. ")
     lcd.clear()
     lcd.write_string("System Shutdown")
-    sys.exit(0)
-    os.kill(os.getpid(), singal.SIGINT)
+    os.kill(os.getpid(), signal.SIGINT)
 
 button1.when_pressed = button_pressed
 button1.when_released = button_released
@@ -48,8 +49,4 @@ try:
 except KeyboardInterrupt:
     lcd.clear()
     lcd.write_string("System Shutdown")
-    print("\nProgram closed via keyboard.")
     sys.exit(0)
-
-
-
